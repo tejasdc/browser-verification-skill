@@ -60,7 +60,7 @@ confidence_limits: # e.g. "WebKit on Linux, not Safari"; "offline tested by setO
 - **WebKit `pageerror` only during reload** → preserve it and reproduce outside the app. Distinguish native navigation diagnostics from window errors and unhandled rejections with a failing JavaScript control; never blanket-filter fetch errors (`references/navigation-diagnostics.md`).
 - **Protected route "passes"** → the generic assertion matched the login page (P0 missing auth). Use a `setup` project with `storageState`.
 - **Hydration race (F15)** → assert on an app-emitted ready state (`[data-hydrated="true"]`) before interacting, never `networkidle` alone for Vite/React.
-- **Editor input differs from exported text** → retain intended, native-before-ack and exported text separately. Match the configured input modality and await native selection/document prerequisites; a successful keypress is not a committed editor transaction (`references/editor-input.md`).
+- **Editor input differs from exported text** → retain intended, native-before-ack and exported text separately. Establish native input readiness, then also test continuous typing across structural keys without application-save/remount waits; helper-paced input can hide lost keystrokes (`references/editor-input.md`).
 
 ## References
 

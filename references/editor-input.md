@@ -7,6 +7,22 @@ first, wait for the canonical document to reflect that deletion before typing.
 An empty capture field does not need a preparatory Backspace. Keep exact text
 assertions after input and separately after persistence/export/reload.
 
+Those prerequisites establish an initial input target or intentional whole-document
+replacement; they do not prove continuous writing. Also exercise structural keys such
+as Enter and Tab followed immediately by more native typing, with no application-save,
+new-row mount or focus assertion inserted between those user actions. Assert the complete
+text, hierarchy and identities afterward, then persistence/reload. Repeat that sequence
+while the actual write boundary is delayed or refuses a commit. A user does not pause
+until a database checkpoint finishes before typing the next word.
+
+Why: Thinkering's 2026-09-07 direct-outline test lost `Quick next` typed immediately
+after Enter: stored bullets were `Quick first` and an empty child. The async structural
+checkpoint replaced the old editor before the new editor owned subsequent input. A test
+that awaited the new row would hide the loss. Preserve that negative; a prepared native
+Y.Text/editor ownership correction passed the original no-wait sequence. See Thinkering
+`docs/plans/2026-09-07-immediate-outliner.md` and its permanent outliner scenarios. Do not
+replace the missing ownership with read-only intervals, synthetic key buffers or replay.
+
 Do not infer touch solely from `navigator.maxTouchPoints`: Playwright 1.63.0 Linux
 WebKit with the iPhone 14 profile reported zero despite configured `hasTouch: true`.
 The native `(pointer: coarse)` query distinguished both phone profiles from both
