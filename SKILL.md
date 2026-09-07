@@ -63,6 +63,7 @@ confidence_limits: # e.g. "WebKit on Linux, not Safari"; "offline tested by setO
 ## References
 
 - `references/playwright-setup.md` - install on Linux, the four-project config, webServer, reporters, trace, retries/workers, Docker, axe install; clock, init scripts, offline recipes.
+- `references/replicated-storage-recovery.md` - when a replicated app restores an older server backup: retain the existing browser and prove both outgoing recovery and new incoming records against actual database state.
 - `references/anti-patterns.md` - P0/P1/P2 patterns that make a test silently pass, and the F1-F15 failure codes with the fix layer for each.
 - `references/visual-and-a11y.md` - stable screenshots, Linux baselines, mask/freeze, semantic screenshot review, overlap and no-scroll guards, axe scoping, data-attribute assertions.
 - `references/agent-discipline.md` - script vs MCP, reading JSON results and traces, the healer constraints, cheaper observer subagents, fossil-test audit after UX rewrites, sources.
