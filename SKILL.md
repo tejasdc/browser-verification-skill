@@ -68,7 +68,7 @@ confidence_limits: # e.g. "WebKit on Linux, not Safari"; "offline tested by setO
 - `references/navigation-diagnostics.md` - narrowly classify a proven native navigation diagnostic while retaining receipts and failing real JavaScript errors; includes an executable two-engine control.
 - `references/anti-patterns.md` - P0/P1/P2 patterns that make a test silently pass, and the F1-F15 failure codes with the fix layer for each.
 - `references/visual-and-a11y.md` - stable screenshots, Linux baselines, mask/freeze, semantic screenshot review, overlap and no-scroll guards, axe scoping, data-attribute assertions.
-- `references/agent-discipline.md` - script vs MCP, reading JSON results and traces, the healer constraints, cheaper observer subagents, fossil-test audit after UX rewrites, sources.
+- `references/agent-discipline.md` - script vs MCP, reading JSON results and traces, evidence manifests across multiple browser configurations, the healer constraints, observer subagents, fossil-test audit after UX rewrites, sources.
 - `templates/` - `playwright.config.ts`, `example.spec.ts`, `snapshot-freeze.css`, `quarantine.md`.
 
 Related catalog skills: `local-test` (server lifecycle, API-vs-UI choice), `pwa-that-doesnt-suck` (verification ladder for iOS-facing PWAs, data-seeded visual matrix), `bug-reproduction-validator` (repro before fix), `structured-editor` (editor test matrix).

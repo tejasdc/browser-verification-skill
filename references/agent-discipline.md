@@ -13,6 +13,22 @@ A browser MCP is fine for one look at one page. Anything with more than three st
 3. Console and network from the trace, not from guesses.
 Then classify with an F-code (`anti-patterns.md`) and fix at that layer.
 
+## Evidence across multiple browser configurations
+
+When a gate runs more than one browser configuration, collect each configuration's
+report and referenced artifacts in the final evidence manifest. Check each report for
+failed, flaky, skipped or missing expected projects before accepting it. One complete
+development-harness report cannot stand in for a separate built-app/offline run.
+Changing or deleting a required report or screenshot must invalidate the evidence.
+Preserve the original bytes when carrying a verified build to another checkout; do not
+rewrite reports to make old results look newly executed. Keep private real-data probes
+outside ordinary synthetic report bundles and give them their own explicit evidence scope.
+
+Source: Thinkering integration, 2026-09-07. Its gate executed a four-project harness
+and a two-project production suite, but its collector originally hashed only the former.
+The corrected collector includes both; focused tests reject absent/failed production
+reports, a missing production engine, changed screenshots and accessibility violations.
+
 ## Healing without lying
 
 Playwright's own healer agent replays a failing test and patches locators, waits and data. It is optimistic: if the product changed, it will rewrite the claim. Constrain yourself the same way a good prompt constrains it:
