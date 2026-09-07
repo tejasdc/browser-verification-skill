@@ -13,6 +13,13 @@ A browser MCP is fine for one look at one page. Anything with more than three st
 3. Console and network from the trace, not from guesses.
 Then classify with an F-code (`anti-patterns.md`) and fix at that layer.
 
+During a long run, distinguish cases completed from cases passed. Inspect failures across
+the complete log or structured progress report; the latest case number and a tail of
+successes do not count passes. Report a known failure while later independent cases run,
+and use the terminal report and exit status before claiming a passing suite.
+Source: Thinkering, 2026-09-07: an early WebKit failure remained outside the log tail while
+later cases passed, leading to an inaccurate progress count before the final failed receipt.
+
 If the page/context/browser closes unexpectedly, preserve native browser stderr, process
 exit code/signal and page/context/disconnect timestamps. Record explicit owned cleanup
 before calling close, so cleanup cannot be mistaken for the initiating failure. Keep
