@@ -57,6 +57,7 @@ confidence_limits: # e.g. "WebKit on Linux, not Safari"; "offline tested by setO
 - **Chromium crashes in a container** → run with `--ipc=host --init`.
 - **Snapshot mismatch on a new machine** → you are comparing against another platform's baseline; regenerate on Linux with `--update-snapshots`, never commit `-darwin.png`.
 - **Test passes on Chromium, fails on WebKit** → real engine difference until proven otherwise; check `min-width:0` on flex children, `100dvh`, input `font-size` under 16px, and composition events.
+- **WebKit `pageerror` only during reload** → preserve it and reproduce outside the app. Distinguish native navigation diagnostics from window errors and unhandled rejections with a failing JavaScript control; never blanket-filter fetch errors (`references/navigation-diagnostics.md`).
 - **Protected route "passes"** → the generic assertion matched the login page (P0 missing auth). Use a `setup` project with `storageState`.
 - **Hydration race (F15)** → assert on an app-emitted ready state (`[data-hydrated="true"]`) before interacting, never `networkidle` alone for Vite/React.
 
@@ -64,6 +65,7 @@ confidence_limits: # e.g. "WebKit on Linux, not Safari"; "offline tested by setO
 
 - `references/playwright-setup.md` - install on Linux, the four-project config, webServer, reporters, trace, retries/workers, Docker, axe install; clock, init scripts, offline recipes.
 - `references/replicated-storage-recovery.md` - when a replicated app restores an older server backup: retain the existing browser and prove both outgoing recovery and new incoming records against actual database state.
+- `references/navigation-diagnostics.md` - narrowly classify a proven native navigation diagnostic while retaining receipts and failing real JavaScript errors; includes an executable two-engine control.
 - `references/anti-patterns.md` - P0/P1/P2 patterns that make a test silently pass, and the F1-F15 failure codes with the fix layer for each.
 - `references/visual-and-a11y.md` - stable screenshots, Linux baselines, mask/freeze, semantic screenshot review, overlap and no-scroll guards, axe scoping, data-attribute assertions.
 - `references/agent-discipline.md` - script vs MCP, reading JSON results and traces, the healer constraints, cheaper observer subagents, fossil-test audit after UX rewrites, sources.
