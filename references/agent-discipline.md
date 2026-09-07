@@ -23,11 +23,18 @@ Changing or deleting a required report or screenshot must invalidate the evidenc
 Preserve the original bytes when carrying a verified build to another checkout; do not
 rewrite reports to make old results look newly executed. Keep private real-data probes
 outside ordinary synthetic report bundles and give them their own explicit evidence scope.
+After changing a report producer or collector, run a focused real browser scenario through
+both ends. Synthetic collector fixtures prove rejection logic, but can agree with the
+collector while the actual producer emits a different attachment name or JSON shape.
+Keep one documented evidence format; do not weaken accessibility assertions to accept it.
 
 Source: Thinkering integration, 2026-09-07. Its gate executed a four-project harness
 and a two-project production suite, but its collector originally hashed only the former.
 The corrected collector includes both; focused tests reject absent/failed production
 reports, a missing production engine, changed screenshots and accessibility violations.
+The first complete gate then exposed that exact missing seam: all 252 browser cases passed,
+but production emitted labeled raw axe arrays while collection required a named JSON object.
+Standardizing the producer and collecting its real two-engine targeted report closed it.
 
 ## Healing without lying
 
