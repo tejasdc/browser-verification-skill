@@ -60,6 +60,7 @@ confidence_limits: # e.g. "WebKit on Linux, not Safari"; "offline tested by setO
 - **WebKit `pageerror` only during reload** → preserve it and reproduce outside the app. Distinguish native navigation diagnostics from window errors and unhandled rejections with a failing JavaScript control; never blanket-filter fetch errors (`references/navigation-diagnostics.md`).
 - **Protected route "passes"** → the generic assertion matched the login page (P0 missing auth). Use a `setup` project with `storageState`.
 - **Hydration race (F15)** → assert on an app-emitted ready state (`[data-hydrated="true"]`) before interacting, never `networkidle` alone for Vite/React.
+- **Editor input differs from exported text** → retain intended, native-before-ack and exported text separately. Match the configured input modality and await native selection/document prerequisites; a successful keypress is not a committed editor transaction (`references/editor-input.md`).
 
 ## References
 
@@ -67,6 +68,7 @@ confidence_limits: # e.g. "WebKit on Linux, not Safari"; "offline tested by setO
 - `references/replicated-storage-recovery.md` - when a replicated app restores an older server backup: retain the existing browser and prove both outgoing recovery and new incoming records against actual database state.
 - `references/pwa-updates.md` - native worker updates across two tabs: preserve drafts and acknowledged records, bind actual revisions, and open an old lazy workspace after activation.
 - `references/navigation-diagnostics.md` - narrowly classify a proven native navigation diagnostic while retaining receipts and failing real JavaScript errors; includes an executable two-engine control.
+- `references/editor-input.md` - input modality, native editor readiness, and preserving evidence of pre-acknowledgment text discrepancies.
 - `references/anti-patterns.md` - P0/P1/P2 patterns that make a test silently pass, and the F1-F15 failure codes with the fix layer for each.
 - `references/visual-and-a11y.md` - stable screenshots, Linux baselines, mask/freeze, semantic screenshot review, overlap and no-scroll guards, axe scoping, data-attribute assertions.
 - `references/agent-discipline.md` - script vs MCP, reading JSON results and traces, evidence manifests across multiple browser configurations, the healer constraints, observer subagents, fossil-test audit after UX rewrites, sources.
