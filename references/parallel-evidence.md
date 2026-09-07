@@ -6,6 +6,19 @@ strict ports, database identity, browser origin/storage partition, bundler/trans
 cache and artifact paths. Read one already-built application or identical verified
 copies; do not let sibling jobs rebuild or empty the same output directory.
 
+Sequential invocations need isolation too. Playwright clears its configured output
+directory at startup. Give every standalone focused run a unique `--output` outside
+any retained run's parent directory, plus separate reporter destinations. Preserve
+original reports, blobs and referenced attachments before a follow-up can clean them.
+Recheck attachment paths before claiming a retained receipt is still verifiable;
+an intact JSON report cannot replace missing images or blobs.
+
+Evidence: Thinkering on 2026-09-07 retained the passing report for run
+`6f509807-9c95-4662-a360-055136ba09ae`, but a subsequent standalone invocation
+cleared the default `test-results` directory containing its four native blobs and
+images. Separately archived focused outputs survived. The later complete gate
+must supply fresh evidence; the historical report is not relabeled or reconstructed.
+
 Use Playwright's native blob reporter and `merge-reports`, not hand-written test-JSON
 merging. Keep every job's exit and blob, await failed siblings, and bind the aggregate
 to one source/build identity. Refuse missing profiles, failed/flaky/skipped cases,
