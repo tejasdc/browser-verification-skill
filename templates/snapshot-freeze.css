@@ -1,0 +1,2 @@
+/* Injected only during toHaveScreenshot via expect.toHaveScreenshot.stylePath. */
+*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; }
