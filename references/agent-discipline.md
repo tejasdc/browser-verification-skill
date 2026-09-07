@@ -13,6 +13,15 @@ A browser MCP is fine for one look at one page. Anything with more than three st
 3. Console and network from the trace, not from guesses.
 Then classify with an F-code (`anti-patterns.md`) and fix at that layer.
 
+If the page/context/browser closes unexpectedly, preserve native browser stderr, process
+exit code/signal and page/context/disconnect timestamps. Record explicit owned cleanup
+before calling close, so cleanup cannot be mistaken for the initiating failure. Keep
+native logs private; avoid API/protocol logging that may include user content. A later
+passing focused run does not explain the original closure or replace its failed receipt.
+Source: Thinkering's complete-corpus run, 2026-09-07: all four SQLite stores remained exact
+after a WebKit closure, but absent native logging left its cause UNKNOWN. Instrumented
+normal/recovery runs and a deliberate unexpected-close control proved the diagnostic seam.
+
 ## Evidence across multiple browser configurations
 
 When a gate runs more than one browser configuration, collect each configuration's
