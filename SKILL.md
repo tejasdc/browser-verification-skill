@@ -26,7 +26,7 @@ How an agent proves a web app works: in real browser engines, at the sizes users
 | Visual baselines | "did it render at all" per viewport | `toHaveScreenshot` with animations disabled, caret hidden, dynamic regions masked |
 | Overlap and no-scroll guards | controls colliding, forbidden scroll at short laptop heights | `page.evaluate` bounding-box walk (`references/visual-and-a11y.md`) |
 | Accessibility | missing names, contrast, focus order | `@axe-core/playwright`, WCAG 2.1 AA tags |
-| Offline / PWA | service-worker fallback, restart recovery | `context.setOffline(true)`, close and reopen context |
+| Offline / PWA | service-worker fallback, restart recovery | Activated worker + cold navigation with network unavailable; preserve storage and name the offline mechanism (`references/playwright-setup.md`) |
 | Human eyeball | hierarchy, weight, copy | you, reading the PNGs |
 
 Playwright's Linux WebKit is upstream WebKit, not Safari: it finds engine-level layout and input bugs, not iOS chrome, viewport-bar, or install behavior. Say "WebKit on Linux" in reports, never "tested on Safari".
