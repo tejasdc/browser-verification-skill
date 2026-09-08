@@ -29,6 +29,14 @@ Source: Thinkering's complete-corpus run, 2026-09-07: all four SQLite stores rem
 after a WebKit closure, but absent native logging left its cause UNKNOWN. Instrumented
 normal/recovery runs and a deliberate unexpected-close control proved the diagnostic seam.
 
+For native transaction faults, await the transaction's own terminal event before asserting
+its event ledger. A rejected request/promise can precede the separately queued `abort`
+event; rejection alone establishes neither that the event has fired nor a successful
+write. Preserve the early observation and the unchanged exact identity, byte and reload
+checks instead of adding sleeps or broad retries. Source: Thinkering's September7 native
+Chromium/WebKit control observed request rejection first, then the intended abort with
+zero stored records; see the [IndexedDB abort algorithm](https://www.w3.org/TR/IndexedDB-3/#abort-transaction).
+
 ## Evidence across multiple browser configurations
 
 When a gate runs more than one browser configuration, collect each configuration's
