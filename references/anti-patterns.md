@@ -17,6 +17,9 @@ Adapted from voidmatcha/e2e-skills (https://github.com/voidmatcha/e2e-skills) an
 | Retry-weakened assertion (`toBeVisible` replacing `toHaveText`) | claim got smaller to pass | restore the original claim (rule 1) |
 | Protected route test with a generic assertion | login page matches too | `setup` project + `storageState`; assert something only the protected page has |
 | Assertion after `page.waitForTimeout` | timing luck | web-first assertion |
+| Invented JavaScript locator options, such as `getByRole('link', { current: 'location' })` | unsupported options can be silently ignored, so the locator selects every link | verify supported options; assert the named link's `aria-current` attribute, and count current links explicitly |
+
+When an ARIA state has no supported role filter, scope by role/name first and narrow with an attribute selector for that state. For example, `nav.getByRole('link').and(page.locator('[aria-current="location"]'))` can assert that exactly one link is current. This is a justified state selector, not a replacement for semantic locators. Incident: resume contents verification, 2026-09-08 — the unsupported `current` option in a JavaScript Playwright probe matched all six links and caused a misleading strict-mode failure before the actual scroll bug could be tested.
 
 ## P1 - fails for the wrong reasons or gives no diagnosis
 
