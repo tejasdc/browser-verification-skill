@@ -37,6 +37,14 @@ checks instead of adding sleeps or broad retries. Source: Thinkering's September
 Chromium/WebKit control observed request rejection first, then the intended abort with
 zero stored records; see the [IndexedDB abort algorithm](https://www.w3.org/TR/IndexedDB-3/#abort-transaction).
 
+For recovery flows, inspect and assert the successful state before reloading or leaving
+the page, then verify persistence separately. Remounting can erase stale component-local
+errors and make a broken recovery interaction look correct. Require the acknowledged
+operation's failure message to clear while unrelated pending/conflict errors remain.
+Source: Thinkering, September 8: all four native profiles saved the retried bullets, but
+pre-reload screenshots still showed two old failure alerts. The existing post-reload
+checks passed; an added pre-reload assertion reproduced the stale feedback deterministically.
+
 ## Evidence across multiple browser configurations
 
 When a gate runs more than one browser configuration, collect each configuration's
