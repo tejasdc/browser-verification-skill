@@ -57,6 +57,15 @@ Highlights, badges, selected blocks, "unsaved" markers: expose `data-*` (`data-s
 
 ## Axe scoping
 
-Run axe per surface and per project once; run it on every state that adds UI (dialogs, menus) because the page-level run misses them. Attach `results.violations` to the test. Disable a rule only with the rule id, the reason and a date. Axe covers roughly a third of WCAG; keyboard-only flows (Tab order, Escape closes, focus returns) are their own specs.
+Run axe on representative rendered surfaces and newly introduced controls, including dialogs
+that a closed-page audit cannot inspect. Select engine/input combinations through repository
+policy. Keep a large-corpus performance case separate from a whole-page accessibility scan;
+automatic teardown must not multiply that scan across unrelated interaction cases. Attach
+`results.violations`; keep keyboard order, Escape and focus-return assertions where those
+behaviors live. Disable a rule only with its identifier and a concrete scoped reason.
+
+Source: Thinkering, September 10, 2026 — a 2,000-note interaction passed but its automatic
+whole-page axe teardown timed out in WebKit. Separate scale and representative accessibility
+cases preserved both oracles and passed across the four available configurations.
 
 Sources: https://playwright.dev/docs/test-snapshots · https://playwright.dev/docs/accessibility-testing · https://argos-ci.com/blog/playwright-visual-regression-testing-ci · pwa-that-doesnt-suck `references/verification-stack.md` (overlap guard, no-scroll, look-at-your-own-screenshots).
