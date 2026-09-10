@@ -1,10 +1,11 @@
 # Parallel jobs without shared mutable test state
 
-When fixtures reset shared state, keep one worker inside each isolated environment
-and run independent device/profile environments concurrently. Give each job distinct
-strict ports, database identity, browser origin/storage partition, bundler/transform
-cache and artifact paths. Read one already-built application or identical verified
-copies; do not let sibling jobs rebuild or empty the same output directory.
+Make writable state case-owned, then enable native case scheduling. A serial group
+is only a temporary constraint for a fixture that cannot yet be isolated, with its
+reason recorded. Share immutable assets and worker-scoped browser processes; give
+cases separate databases, origins/storage partitions and output. Allocate server
+ports through the OS. Do not let sibling jobs rebuild or empty the same directory.
+Measure worker counts against the actual workload instead of imposing a universal cap.
 
 Sequential invocations need isolation too. Playwright clears its configured output
 directory at startup. Give every standalone focused run a unique `--output` outside

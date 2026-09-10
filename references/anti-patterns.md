@@ -54,8 +54,8 @@ Codes F2 and F4 are where "healing" goes wrong: an agent asked to make the test 
 ## Checklist before declaring a spec done
 
 - [ ] Every test name is a claim and the body asserts exactly that claim
-- [ ] No `waitForTimeout`, `force: true`, `try/catch`, `.only`, conditional expects
+- [ ] No `.only` or unawaited test promises; waits, forced input, catches and conditional branches have a behavioral reason and retain failure evidence
 - [ ] Locators follow the role → label → placeholder → text → test id order
-- [ ] Runs green on every project in the matrix, not just Desktop Chrome
+- [ ] Required cases and engine/input configurations match repository policy; missing or skipped coverage remains visible
 - [ ] The effect is asserted at its source (storage, reload, export), not only in the toast
 - [ ] Screenshots for changed surfaces were read by a person or the agent, and the report says what they showed

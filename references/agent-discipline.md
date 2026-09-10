@@ -77,7 +77,9 @@ Playwright's own healer agent replays a failing test and patches locators, waits
 
 ## Observer subagents
 
-Screenshot reading and trace reading are cheap-model work. Hand a subagent the PNG paths and pointed questions; keep the reasoning session's context for the fix. The subagent's report is data to check against the assertions, not a verdict.
+When the user or active project instructions authorize delegation and an independent
+inspection would help, give that agent the actual PNG/trace and a bounded question.
+Otherwise inspect the evidence directly. This reference does not authorize review agents.
 
 ## Fossil-test audit after a UX rewrite
 
@@ -85,9 +87,9 @@ A suite that still targets removed controls trains everyone to ignore red. After
 
 ## Flake quarantine
 
-- `retries: 2` in CI only. Locally zero, so the race is visible.
-- Second flake in seven days: tag `@quarantine`, exclude from the merge gate (`--grep-invert @quarantine`), keep it in a nightly run, record owner and deadline in `templates/quarantine.md`.
-- Seven days: fixed (F-code named) or deleted. Never "fixed" by loosening the assertion.
+- Preserve the first failure and any retried outcome. A useful failing test remains useful.
+- Excluding required behavior needs an explicit repository policy decision and replacement proof; a flake count or deadline cannot authorize removal.
+- Record the affected scope, original evidence, owner and resolution in the existing issue system. `templates/quarantine.md` is an optional decision record, not automatic gate policy.
 
 ## Sources
 

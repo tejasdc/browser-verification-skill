@@ -11,7 +11,11 @@ npx playwright --version                              # must equal the package v
 ```
 `--with-deps` pulls the apt packages WebKit needs; without it WebKit launches and dies with a library error. Firefox is optional; add it only if a user population justifies it.
 
-## Project matrix (mobile + laptop, both engines)
+## Available configurations (select by affected behavior)
+
+These projects make the engine/input combinations available. Repository policy
+selects the meaningful cases for each; this example does not require every case on
+all four projects. Keep periodic alternate-engine and mobile-branch coverage.
 
 ```ts
 import { defineConfig, devices } from '@playwright/test';
@@ -38,8 +42,8 @@ use: {
   colorScheme: 'light',           // add a dark project or emulateMedia per test
 },
 expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: 'disabled', caret: 'hide', stylePath: './tests/snapshot-freeze.css' } },
-retries: process.env.CI ? 2 : 0,
-workers: process.env.CI ? 2 : undefined,
+retries: 0,
+workers: process.env.TEST_WORKERS ? Number(process.env.TEST_WORKERS) : undefined,
 fullyParallel: true,
 forbidOnly: !!process.env.CI,     // a leaked .only() fails CI instead of silently shrinking the suite
 ```
@@ -61,7 +65,11 @@ An agent reads `test-results/results.json` to learn what failed (`suites[].specs
 
 ## Retries, workers, sharding
 
-Outcomes are `passed`, `flaky` (passed after retry) and `failed`. Treat `flaky` as red for merge. `test.describe.configure({ mode: 'serial' })` only where tests genuinely share state. CI horizontal split: `--shard=1/3`.
+Outcomes are `passed`, `flaky` (passed after retry) and `failed`. Preserve skipped and
+interrupted cases as not run. Required coverage cannot pass by filtering them away.
+Refactor independently schedulable cases to own mutable state before increasing
+workers; intentional related clients share state inside one case. Sharding can use
+`--shard=1/3` with native blob merging. Measure the pool instead of assuming CI needs two workers.
 
 ## Docker (optional, for identical baselines)
 

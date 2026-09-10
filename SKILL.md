@@ -11,9 +11,9 @@ How an agent proves a web app works: in real browser engines, at the sizes users
 1. **Never weaken an assertion to make a test pass.** When a test fails, the fix is in the locator, the wait, the fixture data, or the app - never in what the test claims. If the product changed on purpose, rewrite the test in the same change as the product, and say so. Why: agents will happily rewrite `toHaveText('Saved')` into `toBeVisible()` and report green; a green bought that way is a lie that outlives the session (qaby.ai "Green-Pipeline Lie"; voidmatcha P0 list).
 2. **Test the real path, then check the real state.** Drive the UI the way the user does and then assert the effect where it lives (storage, exported file, second page) - not the toast that says it happened. Why: WebArena/OSWorld evaluate environment state, not confirmation pages; a "Saved" badge is the UI's opinion.
 3. **Look at your own screenshot before declaring done.** After a visual change, capture at the mobile and laptop projects and `Read` the PNGs. Evidence nobody looked at is not evidence. Why: Anthropic's harness work found agents shipping features that passed unit tests and curl but did not work end to end.
-4. **Locator order: `getByRole` → `getByLabel` → `getByPlaceholder` → `getByText` → `getByTestId` → never raw CSS/XPath.** Web-first assertions only (`await expect(locator).toBeVisible()`), never `expect(await locator.isVisible()).toBe(true)`. No `page.waitForTimeout()`; use `expect(...).toPass()` for custom polling. Why: role/name locators match what the screenshot shows and survive refactors; hard sleeps are the number-one flake source.
+4. **Prefer roles, labels and stable product hooks.** Native-editor DOM selectors are appropriate when that is the boundary being tested. Use awaited eventual assertions for eventual state; immediate reads may capture a deliberately controlled intermediate state. Replace incidental sleeps with readiness or transaction barriers. Keep timers when timeout or elapsed time is the behavior.
 5. **One script, not thirty tool calls.** For anything multi-step, write a spec file (or a one-off `.mjs` that imports Playwright) and run it; use a browser MCP only for a single glance. Why: MCP serializes every click through the context window and cannot batch; a script gives traces, retries, and reproducibility (Sawyer Hood, vercel agent-browser).
-6. **Flaky is red.** `retries: 2` only in CI; a test that flakes twice in a week gets `@quarantine` (out of the merge gate, still on nightly) with an owner and a seven-day fix-or-delete deadline. Never retry your way to green locally. Why: retries hide the race you were supposed to find.
+6. **Preserve failures.** A retry records a flaky result, not current confidence. Fix relevant product or fixture failures. Quarantine needs the repository's explicit policy decision, retained evidence and replacement proof for any required behavior; occurrence count alone cannot remove a gate or authorize deleting a useful test.
 7. **Linux baselines only.** Screenshot baselines are per browser and per platform; commit only `-linux.png`, generate them on the same Linux box or the pinned Playwright Docker image. Why: a Mac-captured baseline silently creates a second file and both "pass".
 
 ## The stack
@@ -36,10 +36,27 @@ Playwright's Linux WebKit is upstream WebKit, not Safari: it finds engine-level 
 1. **Classify.** Static page or dynamic app? Server already running? Which project(s) does the change touch (mobile, desktop, both)? Write the answer in one line before touching anything.
 2. **Scaffold once** (`references/playwright-setup.md`): install with `npx playwright install --with-deps chromium webkit`, copy `templates/playwright.config.ts`, `templates/snapshot-freeze.css`, `templates/example.spec.ts`; wire `webServer` to the dev command so tests start the app themselves.
 3. **Author with the browser open.** Write the spec while running it (`npx playwright test --project="Desktop Chrome" --headed` locally or `--ui`; on a server, run headless and read the trace). Verify each locator against the live page before committing an assertion. Use `npx playwright codegen URL` when a locator is unclear.
-4. **Run the matrix.** `npx playwright test` runs all projects. For iteration, `--project` and `-g "name"` narrow to seconds; the full matrix is the end-of-change gate, run once or twice, never between edits.
+4. **Run the affected behavior.** Select cases and configurations through repository policy. Use focused checks during repairs, then the integrated/release scope warranted by the change. Do not repeat passing checks without relevant source changes, new failures or unresolved concerns. There is no numerical cap on necessary integration reruns.
 5. **Read the failure, not just the message.** Open `test-results.json` (JSON reporter) to see what failed; then `npx playwright show-trace test-results/**/trace.zip` or read the trace's screenshots and DOM snapshots. Classify with the F-codes in `references/anti-patterns.md` before changing anything.
 6. **Fix at the right layer** (rule 1). Selector drift → locator. Timing → web-first assertion or a state the app exposes (`data-state`). Data → fixture. Product change → rewrite test with the product, in the same change. App bug → fix the app.
 7. **Look, then hand off.** Read the screenshots for the changed surfaces. Report in the format below.
+
+## Choose configurations by behavior
+
+Keep engine and input/viewport as separate axes. Ordinary browser workflows can use
+one primary engine with periodic coverage on the other, retaining mobile-only branches.
+Native editing, selection, focus, touch, storage and PWA boundaries justify immediate
+cross-engine checks. Shared input or responsive changes expand the affected combinations.
+WebKit coverage is not restricted to already-known bugs: periodic coverage finds surprises.
+
+Desktop Chromium plus mobile WebKit does not isolate engine from viewport. Add the
+missing combination when diagnosing. Mobile presets alone do not prove touch input;
+issue the relevant input. Required, periodic and manual scopes remain distinct in receipts.
+Use `local-test` for oracle design, case isolation, native scheduling and build reuse.
+
+Source: Thinkering testing review, September 10, 2026; [Playwright emulation](https://playwright.dev/docs/emulation)
+and [parallelism](https://playwright.dev/docs/test-parallel). Blanket four-project runs
+duplicated ordinary workflows, while desktop-only alternate coverage lost mobile branches.
 
 ## Evidence report (hand-off shape)
 
