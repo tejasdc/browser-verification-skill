@@ -13,6 +13,14 @@ await expect(page).toHaveScreenshot('capture-mobile.png', {
 ```
 Before capture: `await page.waitForFunction(() => document.fonts.ready.then(() => true))`; freeze the clock with `page.clock.install`; set `reducedMotion: 'reduce'`. `stylePath` injects `templates/snapshot-freeze.css` (kills animations/transitions/carets) during capture only. `maxDiffPixelRatio` scales with viewport and is more portable than `maxDiffPixels`.
 
+For a scrolled-region screenshot, verify the target's viewport rectangle before
+capture. Reduced-motion emulation does not itself disable CSS smooth scrolling:
+use `scrollTo({ top, behavior: 'instant' })` when motion is outside the test, or
+await the final scroll position when testing the scrolling behavior. Source:
+chann-app, September 11, 2026 — an immediate screenshot after `scrollTo(0, y)`
+captured the introduction instead of the intended Projects divider despite
+`reducedMotion: 'reduce'`; explicit instant scrolling captured the target.
+
 ## Baselines are per browser and platform
 
 Playwright names baselines `name-<project>-<platform>.png` (`capture-mobile-iPhone-14-linux.png`). Generate and update them on the Linux box or the pinned Docker image: `npx playwright test --update-snapshots`. Commit the `-linux.png` files; add `*-darwin.png` to `.gitignore` so a laptop run never creates a parallel truth. A "missing snapshot" on a fresh machine means you are on the wrong platform, not that the test is new.
