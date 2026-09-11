@@ -21,6 +21,23 @@ Playwright names baselines `name-<project>-<platform>.png` (`capture-mobile-iPho
 
 Pixel diffs answer "did it change"; they cannot answer "is it right". After a visual change, the agent reads the PNGs from `test-results/` or from an explicit `page.screenshot({ path })` with the file-reading tool, at the mobile and laptop sizes, and writes one line per image on what it shows (hierarchy, clipping, overlap, wrong state). A model can also be asked pointed questions about a screenshot ("is the primary action visible without scrolling at 390x844?") as a second lane when pixel diffs are too brittle. This lane never replaces the assertion lane.
 
+For typography changes, inspect the heading and paragraph line endings as well as
+overflow. `text-wrap: balance` and `pretty` can intentionally leave space where
+the next word would fit; WebKit's `pretty` can redistribute an entire paragraph.
+When a wrap looks premature, inspect computed wrapping, white-space, alignment,
+and actual text nodes, then compare the same element with ordinary wrapping at
+the same width and font. DOM Range rectangles reveal the changed line breaks;
+measure characters or individual fragments because one hyphenated word can span
+lines. Choose the behavior that serves the requested reading flow, rather than
+assuming a named typography feature improves it. Report font fallback when the
+reference font is unavailable: matching viewports alone cannot prove identical
+wrapping.
+
+Source: chann-app, September 11, 2026 — screenshots and fold-fit checks passed,
+but the user rejected early heading and paragraph wraps introduced by `balance`
+and `pretty`; same-element runtime comparisons confirmed both causes.
+[WebKit's paragraph-wide pretty implementation](https://webkit.org/blog/16547/better-typography-with-text-wrap-pretty/).
+
 ## Overlap guard (controls colliding)
 
 ```ts
