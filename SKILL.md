@@ -93,3 +93,19 @@ confidence_limits: # e.g. "WebKit on Linux, not Safari"; "offline tested by setO
 - `templates/` - `playwright.config.ts`, `example.spec.ts`, `snapshot-freeze.css`, `quarantine.md`.
 
 Related catalog skills: `local-test` (server lifecycle, API-vs-UI choice), `pwa-that-doesnt-suck` (verification ladder for iOS-facing PWAs, data-seeded visual matrix), `bug-reproduction-validator` (repro before fix), `structured-editor` (editor test matrix).
+
+## What Linux WebKit cannot show, and what to do instead
+
+Playwright's Linux WebKit is not iOS Safari. On 2026-10-01 a phone feature shipped three times
+checked only here and in Chromium, and failed on his iPhone each time: the CSS Custom Highlight
+API painted nothing at all in Linux WebKit (ranges present in the registry, no pixels), while his
+iOS build painted them once and never repainted them when replaced (WebKit bug 321567). Chromium
+showed neither. Rules that follow:
+
+- A rendering path you cannot observe here is not evidence. If Linux WebKit draws nothing where
+  the feature draws something, stop; do not file it as a tool limitation and ship.
+- Touch gestures (press-and-hold, drag, selection), iOS repaint behaviour and reload-on-phone
+  behaviour are checked on real iOS WebKit: the iOS Simulator on his Mac. thinkering serves any
+  look state on loopback for it (`node scripts/look/serve.mjs <state>`) and its `docs/testing.md`
+  documents the simulator harness that drives real touches and takes screenshots. It is an
+  available tool for touch-gesture work, not a gate on every phone change (Tejas, 2026-10-01).
