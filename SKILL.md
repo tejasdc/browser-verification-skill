@@ -4,6 +4,24 @@ description: Use when a web app change must be proven in a real browser - "write
 ---
 # browser-verification
 
+## A link passes only when its destination content loads
+
+On October 16, 2026, Tejas reported update-session links broken for the third time:
+"How do we keep regressing like this? Isn't this a simple change? What broke it?"
+The October 13 acceptance had checked the target URL while the isolated owner showed
+the production session unavailable. A later check accepted any dialog heading, so the
+error dialog itself passed. The new incident was malformed commit provenance (bare
+session numbers and a duplicate wrong-machine trailer), not evidence that the URL
+router had broken again.
+
+For a real link, assert the owner-returned stable identity and loaded destination
+content inside the expected surface. A correct URL, heading or HTTP shell alone is
+insufficient. Keep test records separate from real-owner acceptance; when testing a
+real read, refuse mutations so automatic read marks cannot act as the user. Deliberately
+run the reported broken record through the check and retain its failure before the
+repair passes. In thnkr.ing this is enforced by the update-session release seal check;
+the owning failure ledger records capture `d0b69124` and its evidence.
+
 How an agent proves a web app works: in real browser engines, at the sizes users hold, with evidence it looked at. Written for Playwright on Linux (Chromium + WebKit); every command here runs headless on a server. Rules carry their why. Full detail lives in `references/`; drop-in files in `templates/`.
 
 ## Critical rules (the ones that get faked)
