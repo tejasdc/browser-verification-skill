@@ -44,6 +44,19 @@ unavailable, preserve their exact archive through the update/reload, then enable
 replication and inspect the server after reopening its database. A local render is not
 proof that the server has the same bytes. Keep fixtures synthetic and origins/data owned.
 
+An update rollout must also work from a page that was already open before the new client
+loaded. On October 21, 2026, an old Thinkering page sent only its revision to the update
+acceptance endpoint; the new endpoint required an explicit intent field, returned 400, and
+left that page's Install action stranded. Tejas said, "So are we are we gonna keep
+oscillating here or we actually figure out what the fuck is going on here?" (capture
+`5a37e2f910fe5970939d2f55350ae63e4a7bf27464c93dac1c05331f3295a219`). Exercise the old
+page's actual request bytes through a safe path to the new client during rollout. Do not
+accept an old automatic update request as fresh user consent: identical request bytes do
+not prove the user tapped Install. Keep the migration and consent checks distinct, and
+do not strand the old page as the only route that can deliver the new client. Report
+workspace sync and editor draft safety separately; `pending=0` can coexist with
+`unsavedDrafts=true`.
+
 Evidence: Thinkering native acceptance, 2026-09-07. Pristine55 lost a second tab's unsaved
 capture on another tab's update; public vite-plugin-pwa `onNeedReload` preserved it.
 Different actual bundles then passed Chromium but failed Linux WebKit on an unopened
