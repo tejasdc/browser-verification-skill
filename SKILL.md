@@ -126,8 +126,10 @@ showed neither. Rules that follow:
 
 - A rendering path you cannot observe here is not evidence. If Linux WebKit draws nothing where
   the feature draws something, stop; do not file it as a tool limitation and ship.
-- Touch gestures (press-and-hold, drag, selection), iOS repaint behaviour and reload-on-phone
-  behaviour are checked on real iOS WebKit: the iOS Simulator on his Mac. thinkering serves any
-  look state on loopback for it (`node scripts/look/serve.mjs <state>`) and its `docs/testing.md`
-  documents the simulator harness that drives real touches and takes screenshots. It is an
-  available tool for touch-gesture work, not a gate on every phone change (Tejas, 2026-10-01).
+- Run ordinary desktop browser checks and mobile viewport/responsive checks headless on the
+  server; do not open or focus a Mac desktop browser for them. Use the iOS Simulator on his Mac
+  only for a specific behavior that depends on real iOS WebKit touch or selection and Linux
+  cannot show. thinkering serves any look state on loopback for it
+  (`node scripts/look/serve.mjs <state>`) and its `docs/testing.md` documents the simulator
+  harness that drives real touches and takes screenshots. This is a targeted check, not a gate
+  on every phone change.
