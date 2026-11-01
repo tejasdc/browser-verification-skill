@@ -1,6 +1,6 @@
 ---
 name: browser-verification
-description: Use when a web app change must be proven in a real browser - "write an e2e test", "add Playwright", "test this on mobile and desktop", "does it work in WebKit/Safari", "did they test any of it", "every time I open the highlights filter the app hangs", "why are we overriding and stealing Command-F", "screenshot the page", "ugly lines in the session window", "visual regression", "accessibility scan", "the test is flaky", "verify the UI change", "set up browser testing", "test offline / PWA". Covers browser evidence and its native Safari boundary; Playwright on Linux for Chromium and WebKit, with the owning project's route for real-device checks. Do NOT use for API-only tests (use fetch and the project's test client), or for scraping third-party sites (use agent-browser).
+description: Use when a web app change must be proven in a real browser - "write an e2e test", "add Playwright", "test this on mobile and desktop", "does it work in WebKit/Safari", "did they test any of it", "every time I open the highlights filter the app hangs", "why are we overriding and stealing Command-F", "screenshot the page", "ugly lines in the session window", "why is this running in Chrome on my Mac", "visual regression", "accessibility scan", "the test is flaky", "verify the UI change", "set up browser testing", "test offline / PWA". Covers browser evidence and its native Safari boundary; Playwright on Linux for Chromium and WebKit, with the owning project's route for real-device checks. Do NOT use for API-only tests (use fetch and the project's test client), or for scraping third-party sites (use agent-browser).
 ---
 # browser-verification
 
@@ -127,7 +127,11 @@ showed neither. Rules that follow:
 - A rendering path you cannot observe here is not evidence. If Linux WebKit draws nothing where
   the feature draws something, stop; do not file it as a tool limitation and ship.
 - Run ordinary desktop browser checks and mobile viewport/responsive checks headless on the
-  server; do not open or focus a Mac desktop browser for them. Use the iOS Simulator on his Mac
+  server. A browser on his Mac requires a recorded failure of the relevant server attempt and
+  the Mac owner's website-fallback route, which uses an isolated background profile and never
+  his personal Chrome or desktop focus. This is an exceptional website-access path, not an
+  automatic second platform in a verification matrix; follow `website-runbooks` for third-party
+  sites. Use the iOS Simulator on his Mac
   only for a specific behavior that depends on real iOS WebKit touch or selection and Linux
   cannot show. thinkering serves any look state on loopback for it
   (`node scripts/look/serve.mjs <state>`) and its `docs/testing.md` documents the simulator
