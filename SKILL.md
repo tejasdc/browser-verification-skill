@@ -26,6 +26,7 @@ How an agent proves a web app works: in real browser engines, at the sizes users
 
 ## Critical rules (the ones that get faked)
 
+0. **When something other than this page changes state (an agent, the server, another device), the judge is a page that was already open and did not act.** The acting tab and a server read-back prove only the save. Method: local-test `references/acceptance-proof.md` (2026-11-02, the think-aloud Canvas agent four agents called tested).
 1. **Never weaken an assertion to make a test pass.** When a test fails, the fix is in the locator, the wait, the fixture data, or the app - never in what the test claims. If the product changed on purpose, rewrite the test in the same change as the product, and say so. Why: agents will happily rewrite `toHaveText('Saved')` into `toBeVisible()` and report green; a green bought that way is a lie that outlives the session (qaby.ai "Green-Pipeline Lie"; voidmatcha P0 list).
 2. **Test the real path, then check the real state.** Drive the UI the way the user does and then assert the effect where it lives (storage, exported file, second page) - not the toast that says it happened. Why: WebArena/OSWorld evaluate environment state, not confirmation pages; a "Saved" badge is the UI's opinion.
 3. **Look at your own screenshot before declaring done.** After a visual change, capture at the mobile and laptop projects and `Read` the PNGs. Evidence nobody looked at is not evidence. Why: Anthropic's harness work found agents shipping features that passed unit tests and curl but did not work end to end.
