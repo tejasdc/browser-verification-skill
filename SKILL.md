@@ -1,8 +1,27 @@
 ---
 name: browser-verification
-description: Use when a web app change must be proven in a real browser - "write an e2e test", "add Playwright", "test this on mobile and desktop", "does it work in WebKit/Safari", "did they test any of it", "the notification highlighted the wrong message", "it didn't even scroll to the right position", "every time I open the highlights filter the app hangs", "why are we overriding and stealing Command-F", "screenshot the page", "ugly lines in the session window", "why is this running in Chrome on my Mac", "visual regression", "accessibility scan", "the test is flaky", "verify the UI change", "set up browser testing", "test offline / PWA". Covers browser evidence and its native Safari boundary; Playwright on Linux for Chromium and WebKit, with the owning project's route for real-device checks. Do NOT use for API-only tests (use fetch and the project's test client), or for scraping third-party sites (use agent-browser).
+description: Use when a web app change must be proven in a real browser - "write an e2e test", "add Playwright", "test this on mobile and desktop", "does it work in WebKit/Safari", "did they test any of it", "the notification highlighted the wrong message", "it didn't even scroll to the right position", "Load more threads" disappears after an update, "every time I open the highlights filter the app hangs", "why are we overriding and stealing Command-F", "screenshot the page", "ugly lines in the session window", "why is this running in Chrome on my Mac", "visual regression", "accessibility scan", "the test is flaky", "verify the UI change", "set up browser testing", "test offline / PWA". Covers browser evidence and its native Safari boundary; Playwright on Linux for Chromium and WebKit, with the owning project's route for real-device checks. Do NOT use for API-only tests (use fetch and the project's test client), or for scraping third-party sites (use agent-browser).
 ---
 # browser-verification
+
+## A paged list keeps the depth its reader opened
+
+When a user asks for a paged list to remember their place, open enough pages to put the
+reader below the first page, then cause a live refresh, navigate into an item and back,
+reload, and replace the app build while that page is open. At each step inspect the
+visible item IDs and the item at the viewport, not only a saved scroll number or a
+storage entry. A first-page refresh can overwrite the expanded list and its saved copy
+while a scroll restoration check still passes.
+
+On November 4, 2026, Tejas said: “The Threads page keeps throwing me off. I press
+‘Load more threads’ ... every time it updates, all the loaded threads disappear ...
+when I go into a thread and come back, the loaded threads have all disappeared.”
+The October fix had saved the expanded Open list and scroll position, then reported
+the return behavior done without completing its installed Mac acceptance. A later
+whole-list read replaced both with the first twenty rows. The correction is to check
+the *subsequent refresh* after pagination, not just the immediate Load more or the
+initial restore. thnkr.ing's failure case is
+`thinkering-threads-loaded-pages-disappear-on-refresh`.
 
 ## A link passes only when its destination content loads
 
